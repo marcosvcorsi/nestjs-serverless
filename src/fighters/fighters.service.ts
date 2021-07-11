@@ -12,15 +12,15 @@ export class FightersService {
     return `This action returns all fighters`;
   }
 
-  findOne(id: number) {
+  findOne(id: string) {
     return `This action returns a #${id} fighter`;
   }
 
-  update(id: number, updateFighterDto: UpdateFighterDto) {
+  update(id: string, updateFighterDto: UpdateFighterDto) {
     return `This action updates a #${id} fighter`;
   }
 
-  remove(id: number) {
+  remove(id: string) {
     return `This action removes a #${id} fighter`;
   }
 }
