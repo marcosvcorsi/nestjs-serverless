@@ -2,6 +2,7 @@ service:
   name: nestjs-serverless
 
 plugins:
+  - serverless-dotenv-plugin
   - serverless-dynamodb-local
   - serverless-offline
 
@@ -12,20 +13,30 @@ provider:
   region: us-east-1
   environment:
     FIGHTERS_TABLE_NAME: ${self:custom.FightersTable.name}
-    DYNAMODB_ENDPOINT: ${self:custom.endpoints.dynamodbURL}
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:PutItem
+        - dynamodb:Scan
+        - dynamodb:DeleteItem
+        - dynamodb:GetItem
+        - dynamodb:UpdateItem
+      Resource:
+        - ${self:custom.FightersTable.arn}
 
 resources:
-  FightersTable:
-    Type: AWS::DynamoDB::Table
-    Properties:
-      TableName: FightersTable-${self:provider.stage}
-      BillingMode: PAY_PER_REQUEST
-      AttributeDefinitions:
-        - AttributeName: id
-          AttributeType: S
-      KeySchema:
-        - AttributeName: id
-          KeyType: HASH
+  Resources:
+    FightersTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: FightersTable-${self:provider.stage}
+        BillingMode: PAY_PER_REQUEST
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
 
 functions:
   main:
@@ -44,11 +55,12 @@ custom:
     arn: !GetAtt FightersTable.Arn
   dynamodb:
     stages:
-      - ${self:provider.stage}
+      - dev
+      - local
     start:
+      port: 8000
+      inMemory: true
       migrate: true
-  endpoints:
-    dynamodbURL: 'http://localhost:8000'
 
 package:
   excludeDevDependencies: true
