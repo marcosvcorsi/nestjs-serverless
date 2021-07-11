@@ -8,20 +8,24 @@ plugins:
 provider:
   name: aws
   runtime: nodejs12.x
+  stage: ${opt:stage, 'dev'}
+  region: us-east-1
   environment:
+    FIGHTERS_TABLE_NAME: ${self:custom.FightersTable.name}
     DYNAMODB_ENDPOINT: ${self:custom.endpoints.dynamodbURL}
 
-custom:
-  dynamodb:
-    stages:
-      - ${self:provider.stage}
-    start:
-      migrate: true
-  endpoints:
-    dynamodbURL: 'http://localhost:8000'
-
-package:
-  excludeDevDependencies: true
+resources:
+  FightersTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: FightersTable-${self:provider.stage}
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: id
+          AttributeType: S
+      KeySchema:
+        - AttributeName: id
+          KeyType: HASH
 
 functions:
   main:
@@ -33,3 +37,18 @@ functions:
       - http:
           method: ANY
           path: '{proxy+}'
+
+custom:
+  FightersTable:
+    name: !Ref FightersTable
+    arn: !GetAtt FightersTable.Arn
+  dynamodb:
+    stages:
+      - ${self:provider.stage}
+    start:
+      migrate: true
+  endpoints:
+    dynamodbURL: 'http://localhost:8000'
+
+package:
+  excludeDevDependencies: true
