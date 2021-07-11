@@ -1,4 +1,5 @@
-import * as AWS from 'aws-sdk';
+import { DynamoDB } from 'aws-sdk';
+import { getDynamoDBDocumentClient } from '../utils/dynamoDB';
 
 export type UpdateOptions<T> = {
   id?: string;
@@ -10,10 +11,10 @@ export type UpdateOptions<T> = {
 };
 
 export class DynamoDbRepository<T> {
-  private readonly dynamoDb: AWS.DynamoDB.DocumentClient;
+  private readonly dynamoDb: DynamoDB.DocumentClient;
 
   constructor(private readonly tableName: string) {
-    this.dynamoDb = new AWS.DynamoDB.DocumentClient();
+    this.dynamoDb = getDynamoDBDocumentClient();
   }
 
   async findAll(): Promise<Array<T>> {

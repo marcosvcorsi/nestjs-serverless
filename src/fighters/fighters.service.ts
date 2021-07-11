@@ -11,7 +11,7 @@ export class FightersService {
     return this.fightersRepository.create(createFighterDto);
   }
 
-  findAll() {
+  async findAll() {
     return this.fightersRepository.find();
   }
 

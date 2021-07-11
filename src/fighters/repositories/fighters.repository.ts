@@ -9,6 +9,8 @@ export class FightersRepository {
   private readonly dynamoDbRepository: DynamoDbRepository<Fighter>;
 
   constructor() {
+    console.log('table name: ', process.env.FIGHTERS_TABLE_NAME);
+
     this.dynamoDbRepository = new DynamoDbRepository(
       String(process.env.FIGHTERS_TABLE_NAME),
     );
@@ -17,14 +19,14 @@ export class FightersRepository {
   async create(data: CreateFighterDto): Promise<Fighter> {
     const id = uuid();
 
-    const tech: Fighter = {
+    const fighter: Fighter = {
       id,
       ...data,
     };
 
-    await this.dynamoDbRepository.create(tech);
+    await this.dynamoDbRepository.create(fighter);
 
-    return tech;
+    return fighter;
   }
 
   async find(): Promise<Fighter[]> {

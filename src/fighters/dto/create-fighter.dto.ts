@@ -1,7 +1,7 @@
 export class CreateFighterDto {
   name: string;
   country: string;
-  birthDate: Date;
+  birthDate: string;
   height: number;
   weight: number;
 }

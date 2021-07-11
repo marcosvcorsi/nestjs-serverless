@@ -3,14 +3,13 @@ service:
 
 plugins:
   - serverless-dotenv-plugin
-  - serverless-dynamodb-local
   - serverless-offline
+  - serverless-dynamodb-local
 
 provider:
   name: aws
   runtime: nodejs12.x
   stage: ${opt:stage, 'dev'}
-  region: us-east-1
   environment:
     FIGHTERS_TABLE_NAME: ${self:custom.FightersTable.name}
   iamRoleStatements:
@@ -50,9 +49,9 @@ functions:
           path: '{proxy+}'
 
 custom:
-  FightersTable:
-    name: !Ref FightersTable
-    arn: !GetAtt FightersTable.Arn
+  webpack:
+    webpackConfig: ./webpack.config.js
+    includeModules: true
   dynamodb:
     stages:
       - dev
@@ -61,6 +60,9 @@ custom:
       port: 8000
       inMemory: true
       migrate: true
+  FightersTable:
+    name: !Ref FightersTable
+    arn: !GetAtt FightersTable.Arn
 
 package:
   excludeDevDependencies: true
