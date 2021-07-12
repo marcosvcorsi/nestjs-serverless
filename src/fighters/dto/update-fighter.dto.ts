@@ -1,7 +1,4 @@
-export class UpdateFighterDto {
-  name: string;
-  country: string;
-  birthDate: string;
-  height: number;
-  weight: number;
-}
+import { PartialType } from '@nestjs/swagger';
+import { CreateFighterDto } from './create-fighter.dto';
+
+export class UpdateFighterDto extends PartialType(CreateFighterDto) {}

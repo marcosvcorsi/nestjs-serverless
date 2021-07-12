@@ -6,37 +6,45 @@ import {
   Patch,
   Param,
   Delete,
+  HttpStatus,
+  HttpCode,
 } from '@nestjs/common';
 import { FightersService } from './fighters.service';
 import { CreateFighterDto } from './dto/create-fighter.dto';
 import { UpdateFighterDto } from './dto/update-fighter.dto';
+import { ApiResponse } from '@nestjs/swagger';
 
 @Controller('fighters')
 export class FightersController {
   constructor(private readonly fightersService: FightersService) {}
 
   @Post()
-  create(@Body() createFighterDto: CreateFighterDto) {
+  async create(@Body() createFighterDto: CreateFighterDto) {
     return this.fightersService.create(createFighterDto);
   }
 
+  @ApiResponse({ status: HttpStatus.OK })
   @Get()
-  findAll() {
+  async findAll() {
     return this.fightersService.findAll();
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
+  async findOne(@Param('id') id: string) {
     return this.fightersService.findOne(id);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateFighterDto: UpdateFighterDto) {
+  async update(
+    @Param('id') id: string,
+    @Body() updateFighterDto: UpdateFighterDto,
+  ) {
     return this.fightersService.update(id, updateFighterDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async remove(@Param('id') id: string) {
     return this.fightersService.remove(id);
   }
 }

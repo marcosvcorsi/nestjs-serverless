@@ -6,7 +6,7 @@ module.exports = (options, webpack) => {
 
   return {
     ...options,
-    externals: [],
+    externals: ['@nestjs/swagger', 'swagger-ui-express'],
     output: {
       libraryTarget: 'commonjs2',
     },

@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateFighterDto } from './dto/create-fighter.dto';
 import { UpdateFighterDto } from './dto/update-fighter.dto';
 import { FightersRepository } from './repositories/fighters.repository';
@@ -7,7 +7,7 @@ import { FightersRepository } from './repositories/fighters.repository';
 export class FightersService {
   constructor(private readonly fightersRepository: FightersRepository) {}
 
-  create(createFighterDto: CreateFighterDto) {
+  async create(createFighterDto: CreateFighterDto) {
     return this.fightersRepository.create(createFighterDto);
   }
 
@@ -15,15 +15,21 @@ export class FightersService {
     return this.fightersRepository.find();
   }
 
-  findOne(id: string) {
-    return this.fightersRepository.findById(id);
+  async findOne(id: string) {
+    const fighter = await this.fightersRepository.findById(id);
+
+    if (!fighter) {
+      return new NotFoundException();
+    }
+
+    return fighter;
   }
 
-  update(id: string, updateFighterDto: UpdateFighterDto) {
+  async update(id: string, updateFighterDto: UpdateFighterDto) {
     return this.fightersRepository.update(id, updateFighterDto);
   }
 
-  remove(id: string) {
+  async remove(id: string) {
     return this.fightersRepository.delete(id);
   }
 }
