@@ -12,7 +12,6 @@ import {
 import { FightersService } from './fighters.service';
 import { CreateFighterDto } from './dto/create-fighter.dto';
 import { UpdateFighterDto } from './dto/update-fighter.dto';
-import { ApiResponse } from '@nestjs/swagger';
 
 @Controller('fighters')
 export class FightersController {
@@ -23,7 +22,6 @@ export class FightersController {
     return this.fightersService.create(createFighterDto);
   }
 
-  @ApiResponse({ status: HttpStatus.OK })
   @Get()
   async findAll() {
     return this.fightersService.findAll();
