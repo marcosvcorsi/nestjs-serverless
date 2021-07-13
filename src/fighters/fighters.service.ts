@@ -19,7 +19,7 @@ export class FightersService {
     const fighter = await this.fightersRepository.findById(id);
 
     if (!fighter) {
-      return new NotFoundException();
+      throw new NotFoundException();
     }
 
     return fighter;
@@ -30,6 +30,12 @@ export class FightersService {
   }
 
   async remove(id: string) {
+    const fighter = await this.fightersRepository.findById(id);
+
+    if (!fighter) {
+      throw new NotFoundException();
+    }
+
     return this.fightersRepository.delete(id);
   }
 }

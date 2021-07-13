@@ -41,7 +41,7 @@ export class FightersRepository {
     return this.dynamoDbRepository.findById(id);
   }
 
-  async update(id: string, data: Partial<Fighter>): Promise<void> {
+  async update(id: string, data: Partial<Fighter>): Promise<Fighter> {
     return this.dynamoDbRepository.update({ id, data });
   }
 }

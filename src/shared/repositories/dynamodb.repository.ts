@@ -89,8 +89,8 @@ export class DynamoDbRepository<T> {
     updateExpression,
     expressionAttributeNames,
     expressionAttributeValues,
-  }: UpdateOptions<T>): Promise<any> {
-    return this.dynamoDb
+  }: UpdateOptions<T>): Promise<T> {
+    const { Attributes } = await this.dynamoDb
       .update({
         TableName: this.tableName,
         Key: key || { id },
@@ -101,7 +101,10 @@ export class DynamoDbRepository<T> {
         ExpressionAttributeValues:
           expressionAttributeValues ||
           this.mountExpressionAttributeValues(data),
+        ReturnValues: 'ALL_NEW',
       })
       .promise();
+
+    return Attributes as T;
   }
 }
